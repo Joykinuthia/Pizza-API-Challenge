@@ -33,3 +33,5 @@ def get_restaurant(id):
             'ingredients': rp.pizza.ingredients
         } for rp in restaurant.restaurant_pizzas]
     })
+
+@restaurant_bp.route('/restaurants/<int:id>', methods=['DELETE']) 
