@@ -1,5 +1,4 @@
-from server.models import db
-from server.models.restaurant_pizza import RestaurantPizza
+from ..app import db
 
 class Pizza(db.Model):
     __tablename__ = 'pizzas'
@@ -8,4 +7,4 @@ class Pizza(db.Model):
     name = db.Column(db.String, nullable=False)
     ingredients = db.Column(db.String, nullable=False)
 
-    restaurant_pizzas = db.relationship('RestaurantPizza', back_populates='pizza', cascade='all, delete')
+    restaurant_pizzas = db.relationship('RestaurantPizza', back_populates='pizza')
