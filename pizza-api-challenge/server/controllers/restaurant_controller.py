@@ -15,3 +15,6 @@ def get_restaurants():
         'name': r.name,
         'address': r.address
     } for r in restaurants])
+
+# Route to get a restaurant by ID
+@restaurant_bp.route('/restaurants/<int:id>', methods=['GET'])
