@@ -34,4 +34,13 @@ def get_restaurant(id):
         } for rp in restaurant.restaurant_pizzas]
     })
 
+# Route to delete  a restaurant
 @restaurant_bp.route('/restaurants/<int:id>', methods=['DELETE']) 
+# Delete a restaurant
+def delete_restaurant(id):
+    restaurant = Restaurant.query.get(id)
+    if not restaurant:
+        return jsonify({"error": "Restaurant not found"}), 404
+    db.session.delete(restaurant)
+    db.session.commit()
+    return '', 204
