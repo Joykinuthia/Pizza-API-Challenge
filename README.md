@@ -178,4 +178,17 @@ README.md
 
 ---
 
-Happy coding! 🍕
+## Dependencies
+
+This project uses the following main dependencies:
+
+- **flask**: The main web framework for building the API.
+- **flask_sqlalchemy**: SQLAlchemy integration for Flask, used for ORM/database models.
+- **flask_migrate**: Database migration tool for SQLAlchemy and Flask.
+- **flask-cors**: For handling Cross-Origin Resource Sharing (CORS) in Flask APIs.
+
+All dependencies are managed via Pipenv and listed in the `Pipfile`.
+
+---
+
+Joyrose Kinuthia
