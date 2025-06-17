@@ -1,5 +1,16 @@
 # 🍕 Pizza API Challenge
 
+## Project Description
+
+This application is a RESTful Pizza API built with Flask, following the MVC (Model–View–Controller) architecture. It manages restaurants, pizzas, and the relationships between them, allowing users to:
+
+- List, create, and delete restaurants.
+- List all pizzas.
+- Create and list restaurant-pizza relationships, including price validation.
+- Cascade delete all related restaurant-pizza records when a restaurant is deleted.
+
+The API is designed for easy integration with frontend clients and supports robust validation and error handling. It includes a database seeding script, migration support, and a Postman collection for testing all endpoints. The project is ideal for learning or demonstrating best practices in Flask API development, database relationships, and clean project structure.
+
 ## Project Structure (MVC)
 
 ```
@@ -22,6 +33,8 @@ challenge-1-pizzas.postman_collection.json
 README.md
 ```
 
+---
+
 ## Setup Instructions
 
 1. **Install dependencies:**
@@ -31,28 +44,34 @@ README.md
    ```
 2. **Database setup:**
    ```bash
-   export FLASK_APP=server/app.py
+   export FLASK_APP=server.app
    flask db init
    flask db migrate -m "Initial migration"
    flask db upgrade
    ```
 3. **Seed the database:**
    ```bash
-   python server/seed.py
+   pipenv run python -m server.seed
    ```
+
+---
 
 ## API Routes
 
 ### Restaurants
 - `GET /restaurants` — List all restaurants
 - `GET /restaurants/<id>` — Get a restaurant and its pizzas
+- `POST /restaurants` — Create a new restaurant
 - `DELETE /restaurants/<id>` — Delete a restaurant (cascades to RestaurantPizzas)
 
 ### Pizzas
 - `GET /pizzas` — List all pizzas
 
 ### RestaurantPizzas
+- `GET /restaurant_pizzas` — List all restaurant-pizza relationships
 - `POST /restaurant_pizzas` — Create a new RestaurantPizza
+
+---
 
 ## Example Requests & Responses
 
@@ -60,7 +79,7 @@ README.md
 ```json
 [
   { "id": 1, "name": "Domino's", "address": "123 Pizza St" },
-  ...
+  { "id": 2, "name": "Kiki's Pizza", "address": "456 Cheese Ave" }
 ]
 ```
 
@@ -76,6 +95,16 @@ README.md
 }
 ```
 
+### POST /restaurants
+**Request:**
+```json
+{ "name": "New Place", "address": "789 New St" }
+```
+**Response:**
+```json
+{ "id": 3, "name": "New Place", "address": "789 New St" }
+```
+
 ### DELETE /restaurants/1
 - Success: `204 No Content`
 - Not found: `{ "error": "Restaurant not found" }`
@@ -84,6 +113,21 @@ README.md
 ```json
 [
   { "id": 1, "name": "Pepperoni", "ingredients": "Dough, Tomato Sauce, Cheese, Pepperoni" },
+  { "id": 2, "name": "Veggie", "ingredients": "Dough, Tomato Sauce, Cheese, Peppers, Olives, Onions" }
+]
+```
+
+### GET /restaurant_pizzas
+```json
+[
+  {
+    "id": 1,
+    "price": 10,
+    "pizza_id": 1,
+    "restaurant_id": 1,
+    "pizza": { "id": 1, "name": "Pepperoni", "ingredients": "Dough, Tomato Sauce, Cheese, Pepperoni" },
+    "restaurant": { "id": 1, "name": "Domino's", "address": "123 Pizza St" }
+  },
   ...
 ]
 ```
@@ -96,7 +140,7 @@ README.md
 **Success Response:**
 ```json
 {
-  "id": 4,
+  "id": 3,
   "price": 10,
   "pizza_id": 1,
   "restaurant_id": 1,
@@ -109,13 +153,28 @@ README.md
 { "errors": ["Price must be between 1 and 30"] }
 ```
 
+---
+
 ## Validation Rules
 - `RestaurantPizza.price` must be between 1 and 30 (inclusive).
 - `pizza_id` and `restaurant_id` must reference existing records.
+- `name` and `address` are required for creating a restaurant.
+
+---
 
 ## Postman Usage
 - Import `challenge-1-pizzas.postman_collection.json` into Postman.
 - Test all routes as described above.
+- Use valid IDs from `/restaurants` and `/pizzas` for POST/DELETE requests.
+
+---
+
+## Submission Checklist
+- [x] MVC folder structure
+- [x] Models with validations and relationships
+- [x] All required routes implemented
+- [x] Postman tests passing
+- [x] Well-written README.md
 
 ---
 
