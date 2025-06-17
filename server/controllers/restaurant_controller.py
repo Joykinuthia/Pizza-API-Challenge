@@ -7,11 +7,7 @@ restaurant_bp = Blueprint('restaurant_bp', __name__, url_prefix='/restaurants')
 @restaurant_bp.route('', methods=['GET'])
 def get_restaurants():
     restaurants = Restaurant.query.all()
-    return jsonify([{
-        'id': r.id,
-        'name': r.name,
-        'address': r.address
-    } for r in restaurants]), 200
+    return jsonify([r.to_dict() for r in restaurants]), 200
 
 @restaurant_bp.route('/<int:id>', methods=['GET'])
 def get_restaurant(id):
@@ -19,23 +15,26 @@ def get_restaurant(id):
     if not restaurant:
         return jsonify({'error': 'Restaurant not found'}), 404
 
-    return jsonify({
-        'id': restaurant.id,
-        'name': restaurant.name,
-        'address': restaurant.address,
-        'pizzas': [{
-            'id': rp.pizza.id,
-            'name': rp.pizza.name,
-            'ingredients': rp.pizza.ingredients
-        } for rp in restaurant.restaurant_pizzas]
-    }), 200
+    return jsonify(restaurant.to_dict(include_pizzas=True)), 200
+
+@restaurant_bp.route('', methods=['POST'])
+def create_restaurant():
+    data = request.get_json()
+    name = data.get('name')
+    address = data.get('address')
+    if not name or not address:
+        return jsonify({'errors': ['Name and address are required']}), 400
+    restaurant = Restaurant(name=name, address=address)
+    db.session.add(restaurant)
+    db.session.commit()
+    return jsonify(restaurant.to_dict()), 201
 
 @restaurant_bp.route('/<int:id>', methods=['DELETE'])
 def delete_restaurant(id):
     restaurant = Restaurant.query.get(id)
     if not restaurant:
-        return jsonify({'error': 'Restaurant not found'}), 404
-
+        return {"error": "Restaurant not found"}, 404
     db.session.delete(restaurant)
     db.session.commit()
-    return '', 204
+    return {}, 204
+

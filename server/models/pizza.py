@@ -8,3 +8,10 @@ class Pizza(db.Model):
     ingredients = db.Column(db.String, nullable=False)
 
     restaurant_pizzas = db.relationship('RestaurantPizza', back_populates='pizza')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'ingredients': self.ingredients
+        }

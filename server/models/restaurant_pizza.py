@@ -15,3 +15,11 @@ class RestaurantPizza(db.Model):
     @property
     def is_valid_price(self):
         return 1 <= self.price <= 30
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'price': self.price,
+            'pizza_id': self.pizza_id,
+            'restaurant_id': self.restaurant_id
+        }
